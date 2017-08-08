@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>职工查询</title>
+    <link rel='stylesheet' href='public/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1>职工查询</h1>
+    <p>职工ID：<input type="text" placeholder="eg: 1" id="userId"></p>
+    <p>姓名：<span id="username"></span></p>
+    <p>性别：<span id="userrender"></span></p>
+    <p>介绍：<span id="userdesc"></span></p>
+  </body>
+  <script src="/public/javascripts/jQuery.js"></script>
+  <script>
+    $(function() {
+      $('#userId').on('change', function() {
+        var id = $(this).val();
+        if(id != '') {
+          $.get('api/search', {
+            id: id
+          }).success(function(res) {
+            console.log(res);
+            if (res.status > -1) {
+              var data = res.data[0];
+              $('#username').text(data.name);
+              $('#userrender').text(data.render);
+              $('#userdesc').text(data.desc);
+            } else {
+              alert('该职工不存在');
+            }
+          }).fail(function(err) {
+            alert(err);
+          })
+        }
+      });
+    });
+  </script>
+</html>

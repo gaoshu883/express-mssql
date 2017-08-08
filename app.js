@@ -10,6 +10,11 @@ var users = require('./routes/users');
 
 var app = express();
 
+// 注册服务器服务
+var sqlService = require('./service/msSqlService');
+// 获取数据的方法
+var apis = require('./service/apis');
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -20,10 +25,17 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/users', users);
+app.use('/search', function(req, res, next) {
+  res.render('search');
+});
+
+app.use('/api/search', function(req, res, next) {
+  apis.userinfo_handler(req, res, next);
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
